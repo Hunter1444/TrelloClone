@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Row from './Row';
 import { connect } from 'react-redux';
+import { findDOMNode } from 'react-dom'
 import { DropTarget } from 'react-dnd';
 
 var that;
@@ -28,12 +29,12 @@ class Column extends Component{
       const { connectDropTarget } = this.props;
       let rowItems = this.props.items.map(function(item, index){
         return(
-          <Row key={index} title={item}/>
+          <Row columnName={that.props.title} order={item.order} key={index} title={item.name}/>
         )
       })
     return(
       connectDropTarget(
-        <div data-id={this.props.count} className='column'>
+        <div data-count={this.props.count} data-id={this.props.id} className='column'>
           <span ref='column' className='column__name'>{this.props.title}</span>
           <ul className='column-rows'>
             {rowItems}
@@ -47,10 +48,43 @@ class Column extends Component{
 
 const columnTarget = {
   drop(props, monitor, component) {
+
+    let y = monitor.getSourceClientOffset().y;
+    let nextColumn = component.props.title;
+    let prevColumn = monitor.getItem().prevColumn;
+    let order;
+    let childrens = findDOMNode(component).children[1].children;
+    nextColumn === prevColumn ? order = -1 : order = 0;
+    [].forEach.call(childrens, function(item, index){
+      let childrenY = item.getBoundingClientRect().top;
+      item.style.order = index;
+      let childrenOrder = item.style.order;
+      if(y > childrenY){
+        item.style.order = Number(childrenOrder) - 1
+        order++;
+      } else{
+        item.style.order = Number(childrenOrder) + 1;
+      }
+
+    })
+
+
+
     var RowName = monitor.getItem().name;
     var ColumnName = props.title;
     that.removeRow(RowName, ColumnName);
     that.createRow(RowName, ColumnName);
+
+    childrens = findDOMNode(component).children[1].children;
+    [].forEach.call(childrens, function(item, index){
+      if(item.style.order === ''){
+        item.style.order = order;
+        alert(order)
+      }
+    })
+
+    nextColumn === prevColumn ? order = -1 : order = 0;
+
   },
 }
 

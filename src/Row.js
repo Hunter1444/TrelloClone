@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DragSource } from 'react-dnd';
+import { DragSource, DropTarget } from 'react-dnd';
 import { connect } from 'react-redux';
 
 var that;
@@ -17,7 +17,9 @@ class Row extends Component{
    this.setState({value: event.target.value});
    let rowInfo = {
      oldName,
-     newName: this.state.value
+     newName: this.state.value,
+     order:this.props.order,
+     columnName: this.props.columnName
    }
    this.props.changeText(rowInfo)
   }
@@ -35,10 +37,18 @@ class Row extends Component{
 const rowSource = {
   beginDrag(props) {
     return {
-      name:props.title
+      name:props.title,
+      order: props.order,
+      prevColumn: that.props.columnName
     };
   }
 };
+
+const cardTarget = {
+	hover(props, monitor, component) {
+    console.dir(props)
+	},
+}
 
 function collect(connect, monitor) {
   return {

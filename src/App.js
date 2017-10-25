@@ -12,7 +12,7 @@ class App extends Component {
   }
   render() {
     let columns = this.props.columnList.map(function(item, index){
-      return <Column key={index} count={item.count} title={item.title} items={item.items}/>
+      return <Column count={item.count} key={index} id={item.id} title={item.title} items={item.items}/>
     })
     return (
         <div className="app">
