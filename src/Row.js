@@ -44,12 +44,6 @@ const rowSource = {
   }
 };
 
-const cardTarget = {
-	hover(props, monitor, component) {
-    console.dir(props)
-	},
-}
-
 function collect(connect, monitor) {
   return {
     connectDragSource: connect.dragSource(),

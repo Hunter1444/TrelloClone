@@ -79,7 +79,6 @@ const columnTarget = {
     [].forEach.call(childrens, function(item, index){
       if(item.style.order === ''){
         item.style.order = order;
-        alert(order)
       }
     })
 
